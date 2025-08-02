@@ -1,10 +1,10 @@
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { assets } from '../assets/assets'
-import { useAppContext } from '../context/AppContext'
+import useAppStore from '../stores/AppStore.js';
 
 const Header = () => {
 
-  const {setInput, input} = useAppContext();
+  const {setInput, input} = useAppStore();
   const inputRef = useRef()
   const onSubmitHandler = (e)=>{
     e.preventDefault();

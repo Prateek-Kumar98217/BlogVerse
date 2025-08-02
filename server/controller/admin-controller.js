@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import Blog from '../models/Blog.js';
 import Comment from '../models/Comments.js';
 
-// ADMIN LOGIN
 export const adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -19,7 +18,6 @@ export const adminLogin = async (req, res) => {
   }
 };
 
-// GET ALL BLOGS
 export const getAllBlogsAdmin = async (req, res) => {
   try {
     const blogs = await Blog.find({}).sort({ createdAt: -1 });
@@ -30,7 +28,6 @@ export const getAllBlogsAdmin = async (req, res) => {
   }
 };
 
-// GET ALL COMMENTS
 export const getAllCommentsAdmin = async (req, res) => {
   try {
     const comments = await Comment.find({})
@@ -43,7 +40,6 @@ export const getAllCommentsAdmin = async (req, res) => {
   }
 };
 
-// DASHBOARD DATA
 export const getDashboard = async (req, res) => {
   try {
     const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(5);
@@ -59,7 +55,6 @@ export const getDashboard = async (req, res) => {
   }
 };
 
-// DELETE COMMENT BY ID
 export const deleteCommentById = async (req, res) => {
   try {
     const { id } = req.body;
@@ -76,7 +71,6 @@ export const deleteCommentById = async (req, res) => {
   }
 };
 
-// APPROVE COMMENT BY ID
 export const approveCommentById = async (req, res) => {
   try {
     const { id } = req.body;

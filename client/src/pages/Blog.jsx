@@ -1,18 +1,20 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { assets, comments_data } from '../assets/assets'
+import { assets } from '../assets/assets'
 import Navbar from '../components/Navbar'
 import Moment from 'moment'
-import { useAppContext } from '../context/AppContext'
 import toast from 'react-hot-toast'
+import useAppStore from '../stores/AppStore.js'
 
 const Blog = () => {
   const {id} = useParams()
 
-  const {axios} = useAppContext()
+  const {axios} = useAppStore()
 
   const [data,setData] = useState(null)
   const [comments,setComments] = useState([])
+  const [name,setName] =useState('')
+  const [content,setContent] = useState('')
 
   const fetchBlogdata=async ()=>{
     try{
@@ -24,7 +26,28 @@ const Blog = () => {
   }
 
   const fetchComments = async ()=>{
-    setComments(comments_data)
+    try{
+      const {data} = await axios.post("/api/blog/comments", {blogId: id})
+      data.success? setComments(data.comments): toast.error(data.message)
+    }catch(error){
+      toast.error(error.message)
+    }
+  }
+
+  const addComment = async (e)=>{
+    e.preventDefault();
+    try{
+      const {data} = await axios.post("/api/blog/addComment", {blogId: id, name, content})
+      if (data.success){
+        toast.success(data.message)
+        setName("")
+        setContent("")
+      }else{
+        toast.error(data.message)
+      }
+    }catch(error){
+      toast.error(error.message)
+    }
   }
  
   useEffect(()=>{
@@ -61,8 +84,21 @@ const Blog = () => {
             ))}
 
           </div>
+        </div>
+        <div className='max-w-3xl mx-auto'>
+          <p className='font-semibold mb-4'>Add your comment</p>
+          <form onSubmit={addComment} className='flex flex-col items-start gap-4 max-w-lg'>
+
+            <input onChange={(e)=>setName(e.target.value)} value = {name}
+            type="text" placeholder='Name' required className='w-full p-2 border border-gray-300 rounded outline-none'/>
+
+            <textarea onChange={(e)=> setContent(e.target.value)} value={content} placeholder='Comment' className='w-full p-2 border border-gray-300 rounded outline-none h-48' required></textarea>
+
+            <button type='submit' className='bg-primary text-white rounded p-2 px-8 hover:scale-102 transition-all cursor-pointer'>Submit</button>
+          </form>
+        </div>
       </div>
-    </div>
+
     </div>
   ) : <div>Loading...</div>
   

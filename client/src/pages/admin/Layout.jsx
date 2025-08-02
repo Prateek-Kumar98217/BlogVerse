@@ -1,11 +1,12 @@
 import { assets } from '../../assets/assets'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from '../../components/admin/Sidebar'
-import { useAppContext } from '../../context/AppContext'
+import useAppStore from '../../stores/AppStore.js'
 
 
 const Layout = () => {
-    const {axios, setToken, navigate} = useAppContext()
+    const {axios, setToken} = useAppStore()
+    const navigate = useNavigate()
 
     const logout= ()=>{
         localStorage.removeItem("authToken")

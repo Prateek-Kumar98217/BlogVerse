@@ -1,4 +1,3 @@
-import React from 'react'
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Blog from './pages/Blog';
@@ -10,10 +9,11 @@ import Layout from './pages/admin/Layout';
 import Login from './components/admin/Login';
 import 'quill/dist/quill.snow.css'
 import {Toaster} from "react-hot-toast"
-import { useAppContext } from './context/AppContext';
+import useAppStore from './stores/AppStore.js';
+
 const App = () => {
 
-  const {token} = useAppContext()
+  const {token} = useAppStore()
 
   return (
     <div>
@@ -25,7 +25,7 @@ const App = () => {
            <Route index element={<Dashboard/>}/>
            <Route path='addBlog' element={<AddBlog/>}/>
            <Route path='listBlog' element={<ListBlog/>}/>
-           <Route path='commments' element={<Comments/>}/>
+           <Route path='comments' element={<Comments/>}/>
 
         </Route>
       </Routes>

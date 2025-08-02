@@ -2,11 +2,11 @@ import { useState } from 'react'
 import { blogCategories } from '../assets/assets'
 import { motion } from "framer-motion";
 import BlogCard from './BlogCard'
-import { useAppContext } from '../context/AppContext'
+import useAppStore from '../stores/AppStore';
 
 const BlogList = () => {
     const [menu,setMenu] = useState("All")
-    const {blogs, input} = useAppContext()
+    const {blogs, input} = useAppStore()
 
     const filteredBlogs=()=>{
         if (input===''){

@@ -1,13 +1,12 @@
-import React from 'react'
 import { assets } from '../../assets/assets';
-import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
+import useAppStore from '../../stores/AppStore.js';
 
 const BlogTableItem = ({blog,fetchBlogs,index}) => {
     const{title,createdAt}=blog;
     const BlogDate= new Date(createdAt)
 
-    const {axios}=useAppContext()
+    const {axios}=useAppStore()
     const deleteBlog = async()=>{
         const confirm = window.confirm("Are you sure you want to delete this blog?")
         if(!confirm) return

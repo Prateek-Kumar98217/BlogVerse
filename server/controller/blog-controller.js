@@ -3,6 +3,8 @@ import imagekit from '../configs/imagekit.js';
 import Blog from '../models/Blog.js';
 import Comment from '../models/Comments.js';
 import main from "../configs/gemini.js"
+import { blogValidator } from '../validator/blog-validator.js';
+import { commentValidator } from '../validator/comment-validator.js';
 
 export const generateContent=async(req, res)=>{
     try{
@@ -23,10 +25,19 @@ export const generateContent=async(req, res)=>{
     }
 }
 
-// ADD BLOG
 export const addBlog = async (req, res) => {
   try {
-    const { title, subTitle, description, category, isPublished } = JSON.parse(req.body.blog);
+    const blog= JSON.parse(req.body.blog)
+        // console.log("blog is ",typeof blog)
+        const {value,error}=blogValidator.validate(blog)
+        // console.log("value is ",value)
+        // console.log("type of value",typeof value)
+        if(error){
+          console.log(error)
+            return res.status(400).json({message:"error in validation"})
+        }
+        
+    const { title, subTitle, description, category, isPublished } = value;
     const imageFile = req.file;
 
     if (!title || !description || !category || !imageFile) {
@@ -66,7 +77,6 @@ export const addBlog = async (req, res) => {
   }
 };
 
-// GET ALL PUBLISHED BLOGS
 export const getAllblogs = async (req, res) => {
   try {
     const blogs = await Blog.find({ isPublished: true }).sort({ createdAt: -1 });
@@ -77,7 +87,6 @@ export const getAllblogs = async (req, res) => {
   }
 };
 
-// GET BLOG BY ID
 export const getBlogbyId = async (req, res) => {
   try {
     const { blogId } = req.params;
@@ -94,7 +103,6 @@ export const getBlogbyId = async (req, res) => {
   }
 };
 
-// DELETE BLOG BY ID
 export const deleteBlogbyId = async (req, res) => {
   try {
     const { id } = req.body;
@@ -107,7 +115,6 @@ export const deleteBlogbyId = async (req, res) => {
   }
 };
 
-// TOGGLE PUBLISH STATUS
 export const togglePublish = async (req, res) => {
   try {
     const { id } = req.body;
@@ -127,16 +134,21 @@ export const togglePublish = async (req, res) => {
   }
 };
 
-// ADD COMMENT
 export const addComment = async (req, res) => {
   try {
-    const { blog, name, content } = req.body;
+    const body=req.body;
+    //console.log(body)
+    const {value,error}=commentValidator.validate(body);
+    if(error){
+      return res.status(400).json({ success: false, message: "Invalid comment data"})
+    }
+    const { blogId, name, content } = value;
 
-    if (!blog || !name || !content) {
+    if (!blogId || !name || !content) {
       return res.status(400).json({ success: false, message: "Missing fields in comment" });
     }
 
-    await Comment.create({ blog, name, content });
+    await Comment.create({ blog: blogId, name, content });
     res.json({ success: true, message: "Comment added" });
   } catch (err) {
     console.error("Add comment error:", err);
@@ -144,7 +156,6 @@ export const addComment = async (req, res) => {
   }
 };
 
-// GET APPROVED COMMENTS FOR BLOG
 export const getBlogComments = async (req, res) => {
   try {
     const { blogId } = req.body;

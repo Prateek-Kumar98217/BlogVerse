@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { useAppContext } from '../../context/AppContext'
 import toast from 'react-hot-toast'
+import useAppStore from '../../stores/AppStore.js'
 
 const Login = () => {
 
-    const {axios, setToken} = useAppContext()
+    const {axios, setToken} = useAppStore()
     const [email,setEmail]= useState('')
     const [password,setPassword]= useState('')
     const handleSubmit= async (e)=>{

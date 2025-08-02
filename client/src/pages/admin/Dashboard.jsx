@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react'
 import { assets } from '../../assets/assets'
 import BlogTableItem from '../../components/admin/BlogTableItem'
-import { useAppContext } from '../../context/AppContext'
 import toast from 'react-hot-toast'
+import useAppStore from '../../stores/AppStore.js'
 
 const Dashboard = () => {
-const [dashboardData, setDashboardData]= useState({
-  blogs:0,
-  comments:0,
-  drafts:0,
-  recentBlogs:[]  
-})
-const {axios}=useAppContext()
+  const [dashboardData, setDashboardData]= useState({
+    blogs:0,
+    comments:0,
+    drafts:0,
+    recentBlogs:[]  
+  })
+  const {axios}=useAppStore()
   const fetchDashboard = async ()=>{
     try {
       const {data} = await axios.get("/api/admin/dashboard")
